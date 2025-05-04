@@ -19,13 +19,18 @@ public class JwtTokenProvider {
 		this.jwtExpirationMs = expiration;
 	}
 
-	public String generateToken(String email) {
-		Date now = new Date();
-		Date expiry = new Date(now.getTime() + jwtExpirationMs);
+	public String generateToken(Long authUserId) {
+	    Date now = new Date();
+	    Date expiry = new Date(now.getTime() + jwtExpirationMs);
 
-		return Jwts.builder().setSubject(email).setIssuedAt(now).setExpiration(expiry)
-				.signWith(jwtSecret, SignatureAlgorithm.HS256).compact();
+	    return Jwts.builder()
+	        .setSubject(authUserId.toString())
+	        .setIssuedAt(now)
+	        .setExpiration(expiry)
+	        .signWith(jwtSecret, SignatureAlgorithm.HS256)
+	        .compact();
 	}
+
 
 	public boolean validateToken(String token) {
 		try {

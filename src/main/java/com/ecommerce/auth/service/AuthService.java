@@ -33,7 +33,7 @@ public class AuthService {
 			throw new RuntimeException("Credenciais inválidas");
 		}
 
-		return jwtTokenProvider.generateToken(user.getEmail());
+		return jwtTokenProvider.generateToken(user.getId());
 	}
     
     public void register(RegisterRequestDTO request) {

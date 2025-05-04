@@ -30,6 +30,11 @@ public class AuthUserModel {
 	
 	@Column(name = "CREATE_DATE")
 	private String createDate;
+	
+	
+	public AuthUserModel() {
+		
+	}
 
 	public AuthUserModel(String email, String hashedPassword) {
 		this.email = email;

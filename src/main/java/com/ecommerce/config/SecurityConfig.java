@@ -20,13 +20,16 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
 	    return http
 	        .csrf().disable()
 	        .authorizeHttpRequests(auth -> auth
-	            .requestMatchers("/auth/register", "/auth/logon").permitAll()
+	            .requestMatchers("/auth/register", "/auth/login").permitAll() // <-- Remova /auth/user daqui
 	            .anyRequest().authenticated()
 	        )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 	        .build();
 	}
+
+
 }
