@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ecommerce.auth.dto.LoginRequestDTO;
 import com.ecommerce.auth.dto.RegisterRequestDTO;
 import com.ecommerce.auth.jwt.JwtTokenProvider;
+import com.ecommerce.enums.RoleEnum;
 import com.ecommerce.user.model.AuthUserModel;
 import com.ecommerce.user.repository.AuthUserRepository;
 
@@ -25,16 +26,16 @@ public class AuthService {
 		this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-	public String authenticate(LoginRequestDTO loginRequest) {
-		AuthUserModel user = authUserRepository.findByEmail(loginRequest.getEmail())
-				.orElseThrow(() -> new RuntimeException("Credenciais inválidas"));
+    public String authenticate(LoginRequestDTO loginRequest) {
+        AuthUserModel user = authUserRepository.findByEmail(loginRequest.getEmail())
+            .orElseThrow(() -> new RuntimeException("Credenciais inválidas"));
 
-		if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
-			throw new RuntimeException("Credenciais inválidas");
-		}
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
+            throw new RuntimeException("Credenciais inválidas");
+        }
 
-		return jwtTokenProvider.generateToken(user.getEmail());
-	}
+        return jwtTokenProvider.generateToken(user.getId());
+    }
     
     public void register(RegisterRequestDTO request) {
     	 if (authUserRepository.findByEmail(request.getEmail()).isPresent()) {
