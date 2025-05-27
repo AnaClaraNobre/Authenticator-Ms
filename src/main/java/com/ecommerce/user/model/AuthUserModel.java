@@ -48,7 +48,6 @@ public class AuthUserModel {
 //	@Enumerated(EnumType.STRING)
 //	private Set<RoleEnum> roles = new HashSet<>();
 	
-	
 	public AuthUserModel() {
 		
 	}
