@@ -1,4 +1,4 @@
-name: Deploy User Microservice
+name: Deploy Authenticator Microservice
 
 on:
   push:
@@ -25,10 +25,10 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build da imagem Docker
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/authenticator_ms:latest .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/authenticatorms:latest .
 
       - name: Push da imagem Docker
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/authenticator_ms:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/authenticatorms:latest
 
       - name: Deploy na EC2 via SSH
         uses: appleboy/ssh-action@v1.0.0
@@ -37,6 +37,15 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/authenticator_ms:latest
-            docker stop authenticator_ms || true && docker rm authenticator_ms || true
-            docker run -d --name authenticator_ms -p 8082:8082 ${{ secrets.DOCKER_USERNAME }}/authenticator_ms:latest
+            echo "Criando rede ecommerce-net (se não existir)..."
+            docker network inspect ecommerce-net >/dev/null 2>&1 || docker network create ecommerce-net
+
+            echo "Parando e removendo container antigo..."
+            docker stop authenticatorms || true
+            docker rm authenticatorms || true
+
+            echo "Puxando nova imagem..."
+            docker pull ${{ secrets.DOCKER_USERNAME }}/authenticatorms:latest
+
+            echo "Subindo novo container..."
+            docker run -d --name authenticatorms -p 8082:8080 --network ecommerce-net ${{ secrets.DOCKER_USERNAME }}/authenticatorms:latest
