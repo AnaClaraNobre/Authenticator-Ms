@@ -48,4 +48,4 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/authenticatorms:latest
 
             echo "Subindo novo container..."
-            docker run -d --name authenticatorms -p 8082:8080 --network ecommerce-net ${{ secrets.DOCKER_USERNAME }}/authenticatorms:latest
+            docker run -d --name authenticatorms -p 8081:8080 --network ecommerce-net ${{ secrets.DOCKER_USERNAME }}/authenticatorms:latest
