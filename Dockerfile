@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/*.jar app.jar
 
 # Expõe a porta (ajuste conforme o projeto)
-EXPOSE 8080
+EXPOSE 8081
 
 # Comando de execução
 ENTRYPOINT ["java", "-jar", "app.jar"]
